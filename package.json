@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "babel-generator": "6.25.0",
-    "babel-types": "6.25.0"
+    "babel-types": "6.25.0",
+    "rollup-pluginutils": "2.0.1"
   },
   "scripts": {
     "test": "yarn lint && yarn mocha",
