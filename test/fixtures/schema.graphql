@@ -1,0 +1,13 @@
+interface Node {
+  id: ID!
+}
+
+type Product implements Node {
+  id: ID!
+  name: String!
+  price: Float!
+}
+
+type Query {
+  node(id: ID!): Node
+}

@@ -12,6 +12,8 @@
     "babel-preset-shopify": "16.1.0",
     "eslint": "3",
     "eslint-plugin-shopify": "16.0.1",
+    "graphql": "0.10.3",
+    "graphql-js-schema": "0.6.0",
     "graphql-to-js-client-builder": "0.0.1",
     "mocha": "3.4.2",
     "rollup": "0.43.0",
@@ -22,13 +24,17 @@
   },
   "dependencies": {
     "babel-generator": "6.25.0",
-    "babel-types": "6.25.0"
+    "babel-types": "6.25.0",
+    "graphql-js-client": "0.7.0"
   },
   "scripts": {
     "test": "yarn lint && yarn mocha",
     "mocha": "yarn run rollup-tests && mocha -u tdd $([ -n \"${CI}\" ] && echo --reporter xunit --reporter-options output=$CIRCLE_TEST_REPORTS/junit/mocha.xml) .tmp/tests.js",
-    "rollup-tests": "rollup -c rollup-tests.config.js",
+    "rollup-tests": "yarn run schema:prepare && rollup -c rollup-tests.config.js",
     "prepublish": "rollup -c rollup.config.js",
-    "lint": "eslint --max-warnings 0 -c .eslintrc.json $([ -n \"${CI}\" ] && echo -o $CIRCLE_TEST_REPORTS/junit/eslint.xml -f junit) src/ test/"
+    "lint": "eslint --max-warnings 0 -c .eslintrc.json $([ -n \"${CI}\" ] && echo -o $CIRCLE_TEST_REPORTS/junit/eslint.xml -f junit) src/ test/",
+    "schema:prepare": "yarn run schema:introspect && yarn run schema:convert-to-types",
+    "schema:introspect": "node scripts/generate-schema-json.js",
+    "schema:convert-to-types": "graphql-js-schema --schema-file test/fixtures/schema.json --outdir test/fixtures --schema-bundle-name 'Types' --bundle-only"
   }
 }
