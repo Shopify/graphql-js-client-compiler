@@ -1,11 +1,13 @@
 import assert from 'assert';
 import {
-  transformToFunction,
+  compileToFunction,
   profileQuery,
   profileQueries,
-  compileQuery,
+  compileToModule,
   compileSchemaJson,
-  compileSchemaIDL
+  compileSchemaIDL,
+  compileOptimizedSchemaJson,
+  compileOptimizedSchemaIDL
 } from '../src/index';
 import getFixture from './get-fixture';
 import types from './fixtures/types';
@@ -15,7 +17,7 @@ suite('compile-test', () => {
     const graphql = getFixture('query.graphql');
     const esModule = getFixture('query.js');
 
-    const code = compileQuery(graphql);
+    const code = compileToModule(graphql);
 
     assert.equal(code, esModule);
   });
@@ -24,7 +26,7 @@ suite('compile-test', () => {
     const graphql = getFixture('query.graphql');
     const jsFunction = getFixture('query.function.js');
 
-    const code = transformToFunction(graphql);
+    const code = compileToFunction(graphql);
 
     assert.equal(code, jsFunction);
   });
@@ -82,6 +84,29 @@ suite('compile-test', () => {
     const expected = getFixture('types.js');
 
     return compileSchemaIDL(schema).then((code) => {
+      assert.equal(code, expected);
+    });
+  });
+
+
+  test('it can transform a JSON schema definition into an optimized bundle', () => {
+    const schemaJson = getFixture('schema.json');
+    const queryOne = getFixture('query.graphql');
+    const queryTwo = getFixture('query-two.graphql');
+    const expected = getFixture('optimized-types.js');
+
+    return compileOptimizedSchemaJson(schemaJson, [queryOne, queryTwo]).then((code) => {
+      assert.equal(code, expected);
+    });
+  });
+
+  test('it can transform an IDL schema definition into an optimized bundle', () => {
+    const schema = getFixture('schema.graphql');
+    const queryOne = getFixture('query.graphql');
+    const queryTwo = getFixture('query-two.graphql');
+    const expected = getFixture('optimized-types.js');
+
+    return compileOptimizedSchemaIDL(schema, [queryOne, queryTwo]).then((code) => {
       assert.equal(code, expected);
     });
   });

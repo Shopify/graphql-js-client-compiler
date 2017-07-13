@@ -10,6 +10,12 @@ type Product implements Node {
 
 type Shop {
   name: String!
+  address: String!
+}
+
+type Collection {
+  name: String!
+  products: [Product!]!
 }
 
 type Query {
