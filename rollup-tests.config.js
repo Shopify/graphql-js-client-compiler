@@ -9,7 +9,8 @@ const external = Object.keys(pkg.dependencies).concat(
   'graphql/utilities',
   'assert',
   'fs',
-  'path'
+  'path',
+  'module'
 );
 
 export default {
