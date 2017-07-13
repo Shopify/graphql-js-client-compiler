@@ -12,9 +12,6 @@
     "babel-preset-shopify": "16.1.0",
     "eslint": "3",
     "eslint-plugin-shopify": "16.0.1",
-    "graphql": "0.10.3",
-    "graphql-js-schema": "0.6.0",
-    "graphql-to-js-client-builder": "0.0.1",
     "mocha": "3.4.2",
     "rollup": "0.43.0",
     "rollup-plugin-babel": "2.7.1",
@@ -25,7 +22,10 @@
   "dependencies": {
     "babel-generator": "6.25.0",
     "babel-types": "6.25.0",
-    "graphql-js-client": "0.7.0"
+    "graphql": "0.10.3",
+    "graphql-js-client": "0.7.0",
+    "graphql-js-schema": "0.7.1",
+    "graphql-to-js-client-builder": "0.0.1"
   },
   "scripts": {
     "test": "yarn lint && yarn mocha",

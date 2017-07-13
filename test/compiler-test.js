@@ -1,5 +1,12 @@
 import assert from 'assert';
-import compile, {transformToFunction, profileQuery} from '../src/index';
+import {
+  transformToFunction,
+  profileQuery,
+  profileQueries,
+  compileQuery,
+  compileSchemaJson,
+  compileSchemaIDL
+} from '../src/index';
 import getFixture from './get-fixture';
 import types from './fixtures/types';
 
@@ -8,7 +15,7 @@ suite('compile-test', () => {
     const graphql = getFixture('query.graphql');
     const esModule = getFixture('query.js');
 
-    const code = compile(graphql);
+    const code = compileQuery(graphql);
 
     assert.equal(code, esModule);
   });
@@ -34,5 +41,48 @@ suite('compile-test', () => {
       Query: ['node'],
       Node: []}
     );
+  });
+
+  test('it can return the types utilized by many queries', () => {
+    const queryOne = getFixture('query.graphql');
+    const queryTwo = getFixture('query-two.graphql');
+    const profile = profileQueries([queryOne, queryTwo], types);
+
+    assert.deepEqual(profile, {
+      Product: ['id', 'name', 'price'],
+      ID: [],
+      String: [],
+      Float: [],
+      Query: ['node', 'shop'],
+      Shop: ['name'],
+      Node: []}
+    );
+  });
+
+  test('it can transform a parsed JSON schema definition into an importable type bundle', () => {
+    const schema = JSON.parse(getFixture('schema.json'));
+    const expected = getFixture('types.js');
+
+    return compileSchemaJson(schema).then((code) => {
+      assert.equal(code, expected);
+    });
+  });
+
+  test('it can transform a JSON schema definition into an importable type bundle', () => {
+    const schemaJson = getFixture('schema.json');
+    const expected = getFixture('types.js');
+
+    return compileSchemaJson(schemaJson).then((code) => {
+      assert.equal(code, expected);
+    });
+  });
+
+  test('it can transform an IDL schema definition into an importable type bundle', () => {
+    const schema = getFixture('schema.graphql');
+    const expected = getFixture('types.js');
+
+    return compileSchemaIDL(schema).then((code) => {
+      assert.equal(code, expected);
+    });
   });
 });

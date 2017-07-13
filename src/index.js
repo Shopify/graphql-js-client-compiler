@@ -3,6 +3,9 @@ import generate from 'babel-generator';
 import {transformToAst} from 'graphql-to-js-client-builder';
 import Client from 'graphql-js-client/dev.es';
 import Module from 'module';
+import {generateSchemaBundle} from 'graphql-js-schema';
+import {graphql, buildSchema} from 'graphql';
+import {introspectionQuery} from 'graphql/utilities';
 
 function baseAst(graphQlCode) {
   const clientVar = 'client';
@@ -26,22 +29,58 @@ export function transformToFunction(graphQlCode) {
   return `${generate(t.program([ast])).code}\n`;
 }
 
-export function profileQuery(graphQlCode, types) {
-  const client = new Client(types, {url: 'https://not-an-api.com'});
-  const functionCode = transformToFunction(graphQlCode);
-  const functionModule = new Module();
+export function profileQuery(query, types) {
+  return profileQueries([query], types);
+}
 
-  functionModule._compile(`module.exports = ${functionCode};`, '');
+export function profileQueries(queries, types) {
+  const client = new Client(types, {url: 'https://not-an-api.com'});
+
+  const functions = queries.map((query) => {
+    const code = transformToFunction(query);
+    const virtualModule = new Module();
+
+    virtualModule._compile(`module.exports = ${code}`, '');
+
+    return virtualModule.exports;
+  });
 
   Client.resetProfiler();
   Client.startProfiling();
-  functionModule.exports(client);
+
+  functions.forEach((func) => {
+    console.log(func);
+    func(client);
+  });
+
   Client.pauseProfiling();
 
   return Client.captureProfile();
 }
 
-export default function compile(graphQlCode) {
+export function compileSchemaJson(schemaJson) {
+  let schema;
+
+  if (typeof schemaJson === 'string') {
+    schema = JSON.parse(schemaJson);
+  } else {
+    schema = schemaJson;
+  }
+
+  return generateSchemaBundle(schema, 'Types').then((bundle) => {
+    return bundle.body;
+  });
+}
+
+export function compileSchemaIDL(schemaIDL) {
+  const schema = buildSchema(schemaIDL);
+
+  return graphql(schema, introspectionQuery).then((schemaJson) => {
+    return compileSchemaJson(schemaJson);
+  });
+}
+
+export function compileQuery(graphQlCode) {
   const ast = t.exportDefaultDeclaration(baseAst(graphQlCode));
 
   return `${generate(t.program([ast])).code}\n`;

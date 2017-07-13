@@ -8,6 +8,11 @@ type Product implements Node {
   price: Float!
 }
 
+type Shop {
+  name: String!
+}
+
 type Query {
   node(id: ID!): Node
+  shop: Shop!
 }

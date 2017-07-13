@@ -6,6 +6,7 @@ import commonJs from 'rollup-plugin-commonjs';
 const pkg = require('./package.json');
 
 const external = Object.keys(pkg.dependencies).concat(
+  'graphql/utilities',
   'assert',
   'fs',
   'path'
@@ -24,7 +25,8 @@ export default {
     }),
     resolve({
       preferBuiltins: true,
-      browser: false
+      browser: false,
+      module: true
     }),
     multiEntry({exports: false})
   ],

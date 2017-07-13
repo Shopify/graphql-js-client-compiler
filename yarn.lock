@@ -1586,9 +1586,9 @@ graphql-js-client@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/graphql-js-client/-/graphql-js-client-0.7.0.tgz#6d6006680c4e6eaf2e4d284d430b0fae687de154"
 
-graphql-js-schema@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/graphql-js-schema/-/graphql-js-schema-0.6.0.tgz#273e08bb811fc5fe558296f0bc6fb84d9c28f8d3"
+graphql-js-schema@0.7.1:
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/graphql-js-schema/-/graphql-js-schema-0.7.1.tgz#365ab02769ca3f49fdc1086a67ff6284e32c8c19"
   dependencies:
     babel-generator "6.16.0"
     babel-template "6.16.0"
