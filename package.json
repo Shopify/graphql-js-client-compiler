@@ -25,7 +25,8 @@
     "graphql": "0.10.3",
     "graphql-js-client": "0.7.0",
     "graphql-js-schema": "0.7.1",
-    "graphql-to-js-client-builder": "0.0.1"
+    "graphql-to-js-client-builder": "0.0.1",
+    "minimist": "1.2.0"
   },
   "scripts": {
     "test": "yarn lint && yarn mocha",

@@ -800,11 +800,11 @@ babel-types@6.25.0, babel-types@^6.16.0, babel-types@^6.19.0, babel-types@^6.23.
     lodash "^4.2.0"
     to-fast-properties "^1.0.1"
 
-babylon@6.11.2:
+babylon@6.11.2, babylon@^6.11.0:
   version "6.11.2"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.11.2.tgz#3a64361fedee6d9f8276a9abc0c88a9e5237ff7a"
 
-babylon@^6.11.0, babylon@^6.17.0, babylon@^6.17.2:
+babylon@^6.17.0, babylon@^6.17.2:
   version "6.17.4"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-6.17.4.tgz#3e8b7402b88d22c3423e137a1577883b15ff869a"
 

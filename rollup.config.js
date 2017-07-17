@@ -4,7 +4,10 @@ import {execSync} from 'child_process';
 
 const pkg = require('./package.json');
 
-const external = Object.keys(pkg.dependencies);
+const external = Object.keys(pkg.dependencies).concat(
+  'graphql/utilities',
+  'module'
+);
 const revision = execSync('git rev-parse HEAD')
   .toString()
   .trim()
