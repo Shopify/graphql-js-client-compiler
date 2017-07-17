@@ -25,12 +25,13 @@
     "graphql": "0.10.3",
     "graphql-js-client": "0.7.0",
     "graphql-js-schema": "0.7.1",
-    "graphql-to-js-client-builder": "0.0.1"
+    "graphql-to-js-client-builder": "0.0.1",
+    "minimist": "1.2.0"
   },
   "scripts": {
-    "test": "yarn lint && yarn mocha",
+    "test": "yarn run schema:prepare && yarn lint && yarn mocha",
     "mocha": "yarn run rollup-tests && mocha -u tdd $([ -n \"${CI}\" ] && echo --reporter xunit --reporter-options output=$CIRCLE_TEST_REPORTS/junit/mocha.xml) .tmp/tests.js",
-    "rollup-tests": "yarn run schema:prepare && rollup -c rollup-tests.config.js",
+    "rollup-tests": "rollup -c rollup-tests.config.js",
     "prepublish": "rollup -c rollup.config.js",
     "lint": "eslint --max-warnings 0 -c .eslintrc.json $([ -n \"${CI}\" ] && echo -o $CIRCLE_TEST_REPORTS/junit/eslint.xml -f junit) src/ test/",
     "schema:prepare": "yarn run schema:introspect && yarn run schema:convert-to-types",
