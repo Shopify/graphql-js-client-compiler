@@ -88,7 +88,6 @@ suite('compile-test', () => {
     });
   });
 
-
   test('it can transform a JSON schema definition into an optimized bundle', () => {
     const schemaJson = getFixture('schema.json');
     const queryOne = getFixture('query.graphql');

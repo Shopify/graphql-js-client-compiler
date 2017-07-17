@@ -29,4 +29,3 @@ export function profileQueries(queries, types) {
 
   return Client.captureProfile();
 }
-
