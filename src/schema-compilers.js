@@ -10,7 +10,7 @@ function schemaIDLToJson(schemaIDL) {
   return graphql(schema, introspectionQuery);
 }
 
-export function compileSchemaJson(schemaJson, profile) {
+export function compileSchemaJson(schemaJson, {profile = null} = {}) {
   let schema;
 
   if (typeof schemaJson === 'string') {
@@ -24,13 +24,13 @@ export function compileSchemaJson(schemaJson, profile) {
   });
 }
 
-export function compileSchemaIDL(schemaIDL, profile) {
+export function compileSchemaIDL(schemaIDL, {profile = null} = {}) {
   return schemaIDLToJson(schemaIDL).then((schemaJson) => {
-    return compileSchemaJson(schemaJson, profile);
+    return compileSchemaJson(schemaJson, {profile});
   });
 }
 
-export function compileOptimizedSchemaJson(schemaJson, queries) {
+export function compileOptimizedSchemaJson(schemaJson, {documents}) {
   return compileSchemaJson(schemaJson).then((typesCode) => {
     const typesCjsCode = typesCode.replace('export default', 'module.exports =');
     const typesModule = new Module();
@@ -38,14 +38,14 @@ export function compileOptimizedSchemaJson(schemaJson, queries) {
     typesModule._compile(typesCjsCode, '');
 
     const types = typesModule.exports;
-    const profile = profileQueries(queries, types);
+    const profile = profileQueries(documents, types);
 
-    return compileSchemaJson(schemaJson, profile);
+    return compileSchemaJson(schemaJson, {profile});
   });
 }
 
-export function compileOptimizedSchemaIDL(schemaIDL, queries) {
+export function compileOptimizedSchemaIDL(schemaIDL, {documents}) {
   return schemaIDLToJson(schemaIDL).then((schemaJson) => {
-    return compileOptimizedSchemaJson(schemaJson, queries);
+    return compileOptimizedSchemaJson(schemaJson, {documents});
   });
 }

@@ -94,7 +94,7 @@ suite('compile-test', () => {
     const queryTwo = getFixture('query-two.graphql');
     const expected = getFixture('optimized-types.js');
 
-    return compileOptimizedSchemaJson(schemaJson, [queryOne, queryTwo]).then((code) => {
+    return compileOptimizedSchemaJson(schemaJson, {documents: [queryOne, queryTwo]}).then((code) => {
       assert.equal(code, expected);
     });
   });
@@ -105,7 +105,7 @@ suite('compile-test', () => {
     const queryTwo = getFixture('query-two.graphql');
     const expected = getFixture('optimized-types.js');
 
-    return compileOptimizedSchemaIDL(schema, [queryOne, queryTwo]).then((code) => {
+    return compileOptimizedSchemaIDL(schema, {documents: [queryOne, queryTwo]}).then((code) => {
       assert.equal(code, expected);
     });
   });
