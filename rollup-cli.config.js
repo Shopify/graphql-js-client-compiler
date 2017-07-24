@@ -1,4 +1,5 @@
 import babel from 'rollup-plugin-babel';
+import resolve from 'rollup-plugin-node-resolve';
 import {readFileSync} from 'fs';
 import {execSync} from 'child_process';
 
@@ -7,7 +8,9 @@ const pkg = require('./package.json');
 const external = Object.keys(pkg.dependencies).concat(
   'graphql/utilities',
   'graphql-js-client/dev',
-  'module'
+  'module',
+  'fs',
+  'path'
 );
 const revision = execSync('git rev-parse HEAD')
   .toString()
@@ -20,25 +23,25 @@ Version: ${pkg.version} Commit: ${revision}
 */`;
 
 export default {
-  entry: 'src/index.js',
+  entry: 'src/cli.js',
   plugins: [
     babel({
       presets: [
         ['shopify/node', {modules: false}]
       ]
+    }),
+    resolve({
+      preferBuiltins: true,
+      browser: false,
+      module: true
     })
   ],
   external,
   banner,
   targets: [
     {
-      dest: pkg.main,
+      dest: pkg.bin,
       format: 'cjs',
-      sourceMap: true,
-      moduleName: 'GraphQLJSClientCompiler'
-    }, {
-      dest: pkg.module,
-      format: 'es',
       sourceMap: true
     }
   ]

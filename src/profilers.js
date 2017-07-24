@@ -1,5 +1,5 @@
 import Module from 'module';
-import Client from 'graphql-js-client/dev.es';
+import Client from 'graphql-js-client/dev';
 import {compileToFunction} from './query-compilers';
 
 export function profileQuery(query, types) {
