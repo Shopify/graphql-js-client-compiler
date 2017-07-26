@@ -8,3 +8,5 @@ index.js.map
 .tmp
 test/fixtures/schema.json
 test/fixtures/types.js
+/cli.js
+/cli.js.map

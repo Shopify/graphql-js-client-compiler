@@ -5,11 +5,13 @@
   "main": "index.js",
   "jsnext:main": "index.es.js",
   "module": "index.es.js",
+  "bin": "cli.js",
   "repository": "git@github.com:Shopify/graphql-js-client-compiler.git",
   "author": "Mina Smart <mina.smart@shopify.com>",
   "license": "MIT",
   "devDependencies": {
     "babel-preset-shopify": "16.1.0",
+    "concurrently": "3.5.0",
     "eslint": "3",
     "eslint-plugin-shopify": "16.0.1",
     "mocha": "3.4.2",
@@ -22,17 +24,19 @@
   "dependencies": {
     "babel-generator": "6.25.0",
     "babel-types": "6.25.0",
+    "command-line-usage": "4.0.0",
     "graphql": "0.10.3",
     "graphql-js-client": "0.7.0",
     "graphql-js-schema": "0.7.1",
     "graphql-to-js-client-builder": "0.0.1",
-    "minimist": "1.2.0"
+    "minimist": "1.2.0",
+    "mkdirp": "0.5.1"
   },
   "scripts": {
     "test": "yarn run schema:prepare && yarn lint && yarn mocha",
     "mocha": "yarn run rollup-tests && mocha -u tdd $([ -n \"${CI}\" ] && echo --reporter xunit --reporter-options output=$CIRCLE_TEST_REPORTS/junit/mocha.xml) .tmp/tests.js",
     "rollup-tests": "rollup -c rollup-tests.config.js",
-    "prepublish": "rollup -c rollup.config.js",
+    "prepublish": "concurrently 'rollup -c rollup.config.js' 'rollup -c rollup-cli.config.js'",
     "lint": "eslint --max-warnings 0 -c .eslintrc.json $([ -n \"${CI}\" ] && echo -o $CIRCLE_TEST_REPORTS/junit/eslint.xml -f junit) src/ test/",
     "schema:prepare": "yarn run schema:introspect && yarn run schema:convert-to-types",
     "schema:introspect": "node scripts/generate-schema-json.js",
