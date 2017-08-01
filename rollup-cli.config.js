@@ -7,6 +7,7 @@ const pkg = require('./package.json');
 
 const external = Object.keys(pkg.dependencies).concat(
   'graphql/utilities',
+  'graphql/language',
   'graphql-js-client/dev',
   'module',
   'fs',
