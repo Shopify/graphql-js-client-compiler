@@ -37,7 +37,9 @@ function concatBodies(files) {
   }, '');
 }
 
-function concatenateAndMarkFragments(documentCode) {
+function concatenateAndStripFragments(documentCode) {
+  const allFragments = [];
+
   return documentCode.map((document) => {
     const fragmentFiles = fragmentFilesForDocument(document.path, document.body);
 
@@ -46,9 +48,7 @@ function concatenateAndMarkFragments(documentCode) {
         return fragmentFiles.includes(possibleFragment.path);
       });
 
-      fragments.forEach((fragment) => {
-        fragment.isFragment = true;
-      });
+      allFragments.push(...fragments);
 
       return {
         body: concatBodies(fragments.concat(document)),
@@ -57,6 +57,8 @@ function concatenateAndMarkFragments(documentCode) {
     }
 
     return document;
+  }).filter((documentOrFragment) => {
+    return !allFragments.includes(documentOrFragment);
   });
 }
 
@@ -114,10 +116,7 @@ export default function cli(args, {silent = false} = {}) {
   mkdirp.sync(outdir);
 
   const rawDocumentCode = readDocuments(documents, silent);
-  const documentAndFragmentCode = concatenateAndMarkFragments(rawDocumentCode);
-  const documentCode = documentAndFragmentCode.filter((document) => {
-    return !document.isFragment;
-  });
+  const documentCode = concatenateAndStripFragments(rawDocumentCode);
 
   compileDocuments({outdir, documentCode, documentCompiler, silent});
 
