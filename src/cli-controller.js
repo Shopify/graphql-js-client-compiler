@@ -1,5 +1,5 @@
 import minimist from 'minimist';
-import {join, normalize} from 'path';
+import {join, normalize, isAbsolute} from 'path';
 import {readFileSync} from 'fs';
 import {
   compileToModule,
@@ -10,6 +10,10 @@ import {
 } from './index';
 
 function normalizePath(filename) {
+  if (isAbsolute(filename)) {
+    return normalize(filename);
+  }
+
   return normalize(join(process.cwd(), filename));
 }
 

@@ -23,7 +23,7 @@ Version: ${pkg.version} Commit: ${revision}
 */`;
 
 export default {
-  entry: 'src/cli.js',
+  entry: 'src/cli-executor.js',
   plugins: [
     babel({
       presets: [
