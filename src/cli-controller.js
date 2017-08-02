@@ -1,5 +1,5 @@
 import minimist from 'minimist';
-import {join, normalize} from 'path';
+import {resolve} from 'path';
 import {readFileSync} from 'fs';
 import {
   compileToModule,
@@ -9,13 +9,9 @@ import {
   compileSchemaIDL
 } from './index';
 
-function normalizePath(filename) {
-  return normalize(join(process.cwd(), filename));
-}
-
 function splitFiles(files, schemaPath) {
-  const filenames = files.map(normalizePath);
-  const schema = normalizePath(schemaPath);
+  const filenames = files.map((path) => resolve(path));
+  const schema = resolve(schemaPath);
 
   const documents = filenames.filter((filename) => {
     return schema !== filename;
@@ -91,6 +87,6 @@ export default function run(argv) {
     documents,
     schemaCompiler,
     schema: schema && schemaFullPath,
-    outdir: normalizePath(outdir)
+    outdir: resolve(outdir)
   };
 }

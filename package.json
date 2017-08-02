@@ -19,7 +19,8 @@
     "rollup-plugin-babel": "2.7.1",
     "rollup-plugin-commonjs": "8.0.2",
     "rollup-plugin-multi-entry": "2.0.1",
-    "rollup-plugin-node-resolve": "3.0.0"
+    "rollup-plugin-node-resolve": "3.0.0",
+    "tmp": "0.0.31"
   },
   "dependencies": {
     "babel-generator": "6.25.0",

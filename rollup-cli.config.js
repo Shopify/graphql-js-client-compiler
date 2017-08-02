@@ -7,6 +7,7 @@ const pkg = require('./package.json');
 
 const external = Object.keys(pkg.dependencies).concat(
   'graphql/utilities',
+  'graphql/language',
   'graphql-js-client/dev',
   'module',
   'fs',
@@ -23,7 +24,7 @@ Version: ${pkg.version} Commit: ${revision}
 */`;
 
 export default {
-  entry: 'src/cli.js',
+  entry: 'src/cli-executor.js',
   plugins: [
     babel({
       presets: [

@@ -1,0 +1,5 @@
+fragment ProductFragment on Product {
+  id
+  name
+  price
+}

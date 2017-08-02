@@ -3,30 +3,66 @@ import {relative, basename, dirname, join} from 'path';
 import mkdirp from 'mkdirp';
 import controller from './cli-controller';
 import usage from './usage';
+import fragmentFilesForDocument from './fragment-files-for-document';
 
-function read(path) {
-  // Double space after read to align with [WRITE]
-  console.log(`[READ]  ${path}`);
+function read(path, silent) {
+  if (!silent) {
+    // Double space after read to align with [WRITE]
+    console.log(`[READ]  ${path}`);
+  }
 
   return readFileSync(path).toString();
 }
 
-function write(path, body) {
-  console.log(`[WRITE] ${path}`);
+function write(path, body, silent) {
+  if (!silent) {
+    console.log(`[WRITE] ${path}`);
+  }
 
   return writeFileSync(path, body);
 }
 
-function readDocuments(documents) {
+function readDocuments(documents, silent) {
   return documents.map((path) => {
     return {
-      body: read(path),
+      body: read(path, silent),
       path
     };
   });
 }
 
-function compileDocuments({documentCode, documentCompiler, outdir}) {
+function concatBodies(files) {
+  return files.reduce((buffer, file) => {
+    return buffer + file.body;
+  }, '');
+}
+
+function concatenateAndStripFragments(documentCode) {
+  const allFragments = [];
+
+  return documentCode.map((document) => {
+    const fragmentFiles = fragmentFilesForDocument(document.path, document.body);
+
+    if (fragmentFiles.length) {
+      const fragments = documentCode.filter((possibleFragment) => {
+        return fragmentFiles.includes(possibleFragment.path);
+      });
+
+      allFragments.push(...fragments);
+
+      return {
+        body: concatBodies(fragments.concat(document)),
+        path: document.path
+      };
+    }
+
+    return document;
+  }).filter((documentOrFragment) => {
+    return !allFragments.includes(documentOrFragment);
+  });
+}
+
+function compileDocuments({documentCode, documentCompiler, outdir, silent}) {
   const compiledDocuments = documentCode.map((document) => {
     const relativePath = relative(process.cwd(), document.path);
     const filename = basename(relativePath, '.graphql');
@@ -39,19 +75,18 @@ function compileDocuments({documentCode, documentCompiler, outdir}) {
     };
   });
 
-
   compiledDocuments.forEach((document) => {
     mkdirp.sync(dirname(document.path));
 
-    write(document.path, document.body);
+    write(document.path, document.body, silent);
   });
 
   return documentCode.map((document) => document.body);
 }
 
-function compileSchema({outdir, documentCode, schema, schemaCompiler}) {
+function compileSchema({outdir, documentCode, schema, schemaCompiler, silent}) {
   const documentBodies = documentCode.map((document) => document.body);
-  const schemaBody = read(schema);
+  const schemaBody = read(schema, silent);
   const relativeSchemaPath = relative(process.cwd(), schema);
   const extension = `.${schema.split('.').pop()}`;
   const filename = basename(relativeSchemaPath, extension);
@@ -59,11 +94,11 @@ function compileSchema({outdir, documentCode, schema, schemaCompiler}) {
   const outputPath = join(outdir, relativeDirectory, `${filename}.js`);
 
   return schemaCompiler(schemaBody, {documents: documentBodies}).then((body) => {
-    write(outputPath, body);
+    write(outputPath, body, silent);
   });
 }
 
-function run(args) {
+export default function cli(args, {silent = false} = {}) {
   const {
     documents,
     documentCompiler,
@@ -80,13 +115,14 @@ function run(args) {
 
   mkdirp.sync(outdir);
 
-  const documentCode = readDocuments(documents);
+  const rawDocumentCode = readDocuments(documents, silent);
+  const documentCode = concatenateAndStripFragments(rawDocumentCode);
 
-  compileDocuments({outdir, documentCode, documentCompiler});
+  compileDocuments({outdir, documentCode, documentCompiler, silent});
 
   if (schema && schemaCompiler) {
-    compileSchema({outdir, documentCode, schema, schemaCompiler});
+    return compileSchema({outdir, documentCode, schema, schemaCompiler, silent});
   }
-}
 
-run(process.argv.slice(2));
+  return Promise.resolve();
+}
