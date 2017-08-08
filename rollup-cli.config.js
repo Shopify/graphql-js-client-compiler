@@ -18,7 +18,9 @@ const revision = execSync('git rev-parse HEAD')
   .trim()
   .slice(0, 7);
 
-const banner = `/*
+const banner = `#!/usr/bin/env node
+
+/*
 ${readFileSync('./LICENSE.md')}
 Version: ${pkg.version} Commit: ${revision}
 */`;
