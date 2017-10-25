@@ -5,12 +5,19 @@ import {transformToAst} from 'graphql-to-js-client-builder';
 function baseAst(graphQlCode) {
   const clientVar = 'client';
   const documentVar = 'document';
+  const spreadsVar = 'spreads';
+  const variablesVar = 'variables';
 
   return t.functionDeclaration(
     t.identifier('query'),
     [t.identifier(clientVar)],
     t.blockStatement(
-      transformToAst(graphQlCode, clientVar, documentVar, 'spreads').concat(
+      transformToAst(graphQlCode, {
+        clientVar,
+        documentVar,
+        spreadsVar,
+        variablesVar
+      }).concat(
         t.returnStatement(t.identifier(documentVar))
       )
     )

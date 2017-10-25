@@ -1671,9 +1671,9 @@ graphql-js-schema@0.7.1:
     rollup "0.36.3"
     tmp "0.0.29"
 
-graphql-to-js-client-builder@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-to-js-client-builder/-/graphql-to-js-client-builder-0.0.1.tgz#07714ce17f31633d37aa34aacba63449c636ac21"
+graphql-to-js-client-builder@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/graphql-to-js-client-builder/-/graphql-to-js-client-builder-1.0.0.tgz#3660e1c1a89422b926b913f3cf72e07fd8b3e99d"
   dependencies:
     babel-generator "6.24.1"
     babel-types "6.24.1"
