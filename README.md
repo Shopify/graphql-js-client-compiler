@@ -8,6 +8,7 @@ Converts GraphQL files and schema definitions into ES Modules for use with the [
 
 - [Installation](#installation)
 - [Examples](#examples)
+- [Fragments](#fragments)
 - [CLI Usage](#cli_usage)
 - [API](#api)
 - [Complete example](#complete_example)
@@ -56,6 +57,20 @@ $ graphql-js-client-compiler --schema schema.graphql queries/**/*.graphql
 ```bash
 $ graphql-js-client-compiler --outdir src --schema schema.graphql --optimize queries/**/*.graphql
 ```
+
+### Fragments
+
+Documents may reference fragments outside of the current `.graphql` file. For example:
+
+```graphql
+query ($id: ID!) {
+  node(id: $id) {
+    ...ProductFragment
+  }
+}
+```
+
+If `ProductFragment` isn't in the `.graphql` file, the compiler will search for a file called `ProductFragment.graphql` in the same directory. This allows fragments to be recycled between documents.
 
 ### API
 
