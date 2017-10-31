@@ -121,23 +121,15 @@ suite('cli-integration-test', () => {
       '--outdir',
       outdir,
       'query-one.graphql',
-      'sub-folder/query-two.graphql',
       'ProductFragment.graphql'
     ], {silent: true}).then(() => {
       assert.deepEqual(readdirSync(outdir), [
-        'query-one.js',
-        'sub-folder'
-      ]);
-      assert.deepEqual(readdirSync(join(outdir, 'sub-folder')), [
-        'query-two.js'
+        'query-one.js'
       ]);
 
       [{
         output: join(outdir, 'query-one.js'),
         fixture: join(process.cwd(), '../concatenated-fragment-output/query-one.js')
-      }, {
-        output: join(outdir, 'sub-folder/query-two.js'),
-        fixture: join(process.cwd(), '../concatenated-fragment-output/sub-folder/query-two.js')
       }].forEach(assertFilesMatch);
     });
   });
