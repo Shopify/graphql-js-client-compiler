@@ -32,9 +32,9 @@ suite('fragment-files-for-document-test', () => {
 
     const queryPath = join(process.cwd(), 'queries', 'has-undefined-fragments.graphql');
 
-    const undefinedFgramentPaths = fragmentFilesForDocument(queryPath, queryWithUndefinedFragments);
+    const undefinedFragmentPaths = fragmentFilesForDocument(queryPath, queryWithUndefinedFragments);
 
-    assert.deepEqual(undefinedFgramentPaths, [
+    assert.deepEqual(undefinedFragmentPaths, [
       join(process.cwd(), 'queries', 'collectionFragment.graphql'),
       join(process.cwd(), 'queries', 'productFragmentPartTwo.graphql')
     ]);
