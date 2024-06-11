@@ -30,7 +30,7 @@
     "graphql-js-client": "0.9.0",
     "graphql-js-schema": "0.7.1",
     "graphql-to-js-client-builder": "1.0.0",
-    "minimist": "1.2.0",
+    "minimist": "1.2.6",
     "mkdirp": "0.5.1"
   },
   "scripts": {
